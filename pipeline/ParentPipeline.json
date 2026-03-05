@@ -1,0 +1,208 @@
+{
+	"name": "ParentPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "INCREMENTAL",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SCHEMA AWARE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Incremental Loading",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "API INGESTION",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "WebConnect",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SCHEMA AWARE",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "API INGESTION",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SchemaAwarepipeline",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"parameters": {
+			"flight_schema": {
+				"type": "object",
+				"defaultValue": {
+					"type": "TabularTranslator",
+					"mappings": [
+						{
+							"source": {
+								"name": "flight_id",
+								"type": "String",
+								"physicalType": "String"
+							},
+							"sink": {
+								"name": "flight_id",
+								"type": "String",
+								"physicalType": "String"
+							}
+						},
+						{
+							"source": {
+								"name": "flight_number",
+								"type": "String",
+								"physicalType": "String"
+							},
+							"sink": {
+								"name": "flight_number",
+								"type": "String",
+								"physicalType": "String"
+							}
+						},
+						{
+							"source": {
+								"name": "departure_time",
+								"type": "String",
+								"physicalType": "String"
+							},
+							"sink": {
+								"name": "departure_time",
+								"type": "String",
+								"physicalType": "String"
+							}
+						},
+						{
+							"source": {
+								"name": "arrival_time",
+								"type": "String",
+								"physicalType": "String"
+							},
+							"sink": {
+								"name": "arrival_time",
+								"type": "String",
+								"physicalType": "String"
+							}
+						}
+					],
+					"typeConversion": true,
+					"typeConversionSettings": {
+						"allowDataTruncation": true,
+						"treatBooleanAsNumber": false
+					}
+				}
+			},
+			"passenger_schema": {
+				"type": "string",
+				"defaultValue": {
+					"type": "TabularTranslator",
+					"mappings": [
+						{
+							"source": {
+								"name": "passenger_id",
+								"type": "String",
+								"physicalType": "String"
+							},
+							"sink": {
+								"name": "passenger_id",
+								"type": "String",
+								"physicalType": "String"
+							}
+						},
+						{
+							"source": {
+								"name": "full_name",
+								"type": "String",
+								"physicalType": "String"
+							},
+							"sink": {
+								"name": "full_name",
+								"type": "String",
+								"physicalType": "String"
+							}
+						},
+						{
+							"source": {
+								"name": "gender",
+								"type": "String",
+								"physicalType": "String"
+							},
+							"sink": {
+								"name": "gender",
+								"type": "String",
+								"physicalType": "String"
+							}
+						},
+						{
+							"source": {
+								"name": "age",
+								"type": "String",
+								"physicalType": "String"
+							},
+							"sink": {
+								"name": "age",
+								"type": "String",
+								"physicalType": "String"
+							}
+						},
+						{
+							"source": {
+								"name": "country",
+								"type": "String",
+								"physicalType": "String"
+							},
+							"sink": {
+								"name": "country",
+								"type": "String",
+								"physicalType": "String"
+							}
+						}
+					],
+					"typeConversion": true,
+					"typeConversionSettings": {
+						"allowDataTruncation": true,
+						"treatBooleanAsNumber": false
+					}
+				}
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-03-03T17:24:59Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

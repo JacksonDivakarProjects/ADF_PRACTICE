@@ -1,0 +1,21 @@
+{
+	"name": "SinkHTTP_JSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "JacksonAzureStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "airline.json",
+				"folderPath": "SINK_HTTP_JSON",
+				"fileSystem": "sinkpractice"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
