@@ -1,0 +1,25 @@
+{
+	"name": "DataFlowSampleSink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "JacksonAzureStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "sample_1.csv",
+				"folderPath": "SINK_SAMPLE",
+				"fileSystem": "Dataflow"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

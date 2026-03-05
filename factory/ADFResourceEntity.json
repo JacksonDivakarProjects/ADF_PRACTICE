@@ -1,0 +1,9 @@
+{
+	"name": "ADFResourceEntity",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "2bdf6c72-c7e5-4f2f-b9bc-ae703ee3d141",
+		"tenantId": "9203e109-c090-4996-af7f-94ef2a67c461"
+	}
+}

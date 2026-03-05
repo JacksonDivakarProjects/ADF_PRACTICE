@@ -1,0 +1,21 @@
+{
+	"name": "Sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "JacksonAzureStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "incrementalsink",
+				"fileSystem": "sinkpractice"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
