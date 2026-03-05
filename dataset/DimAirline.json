@@ -1,0 +1,23 @@
+{
+	"name": "DimAirline",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "JacksonAzureStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "DimAirline.csv",
+				"fileSystem": "sourcepractice"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

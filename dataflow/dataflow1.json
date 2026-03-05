@@ -9,18 +9,38 @@
 						"referenceName": "PassengerData",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
-				}
-			],
-			"sinks": [
+					"name": "Passenger"
+				},
 				{
 					"dataset": {
-						"referenceName": "DataFlowSampleSink",
+						"referenceName": "DimAirport",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "Airport"
+				},
+				{
+					"dataset": {
+						"referenceName": "DimFlight",
+						"type": "DatasetReference"
+					},
+					"name": "Flight"
+				},
+				{
+					"dataset": {
+						"referenceName": "DimAirline",
+						"type": "DatasetReference"
+					},
+					"name": "Airline"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable",
+						"type": "DatasetReference"
+					},
+					"name": "FactBooking"
 				}
 			],
+			"sinks": [],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
@@ -33,6 +53,18 @@
 				},
 				{
 					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "select3"
 				}
 			],
 			"scriptLines": [
@@ -45,8 +77,35 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive(gender = iif(gender == 'M', 'Male',\r",
+				"     ignoreNoFilesFound: false) ~> Passenger",
+				"source(output(",
+				"          airport_id as integer,",
+				"          airport_name as string,",
+				"          city as string,",
+				"          country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'arrayOfDocuments') ~> Airport",
+				"source(output(",
+				"          flight_id as short,",
+				"          flight_number as string,",
+				"          departure_time as string,",
+				"          arrival_time as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Flight",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Airline",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: (select * from dbo.FactBookings),",
+				"     format: 'query') ~> FactBooking",
+				"Passenger derive(gender = iif(gender == 'M', 'Male',\r",
 				"    iif(gender == 'F', 'Female', gender)\r",
 				")) ~> derivedColumn1",
 				"derivedColumn1 filter(age>=18) ~> filter1",
@@ -54,13 +113,19 @@
 				"     age==18,",
 				"     disjoint: true) ~> split1@(agegreaterthan18, ageequals)",
 				"split1@agegreaterthan18 derive(first_name = split(full_name,\" \")[1]) ~> derivedColumn2",
-				"derivedColumn2 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     umask: 0022,",
-				"     preCommands: [],",
-				"     postCommands: [],",
+				"Airport derive(airport_name = upper(airport_name)) ~> derivedColumn3",
+				"Flight select(mapColumn(",
+				"          flight_id,",
+				"          flight_number,",
+				"          departure_time,",
+				"          arrival_time",
+				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"Airline select(skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"FactBooking select(skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select3"
 			]
 		}
 	}
