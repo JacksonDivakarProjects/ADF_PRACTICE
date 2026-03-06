@@ -1,0 +1,65 @@
+{
+	"name": "AGGFLOW",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "JacksonAzureStorage",
+						"type": "LinkedServiceReference"
+					},
+					"name": "OBT"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "FlightNoGroupby"
+				},
+				{
+					"name": "RankTotalCost"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          booking_id as integer,",
+				"          passenger_id as integer,",
+				"          flight_id as integer,",
+				"          airline_id as integer,",
+				"          origin_airport_id as integer,",
+				"          destination_airport_id as integer,",
+				"          booking_date as date,",
+				"          ticket_cost as decimal(10,2),",
+				"          flight_duration_mins as integer,",
+				"          checkin_status as boolean,",
+				"          passenger_full_name as string,",
+				"          passenger_gender as string,",
+				"          passenger_age as short,",
+				"          airline_name as string,",
+				"          country as string,",
+				"          origin_airport_name as string,",
+				"          origin_airport_city as string,",
+				"          origin_airport_country as string,",
+				"          destination_airport_name as string,",
+				"          destination_airport_city as string,",
+				"          destination_airport_country as string,",
+				"          flight_number as string,",
+				"          departure_time as string,",
+				"          arrival_time as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'sinkpractice',",
+				"     folderPath: 'GOLD_LAYER/OBT') ~> OBT",
+				"OBT aggregate(groupBy(flight_number),",
+				"     TotalTicketCost = sum(ticket_cost),",
+				"          CountOfCheckin = count(checkin_status)) ~> FlightNoGroupby",
+				"FlightNoGroupby window(desc(TotalTicketCost, true),",
+				"     Rank = denseRank()) ~> RankTotalCost"
+			]
+		}
+	}
+}
