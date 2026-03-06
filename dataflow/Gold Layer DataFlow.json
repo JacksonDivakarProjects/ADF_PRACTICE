@@ -1,0 +1,77 @@
+{
+	"name": "Gold Layer DataFlow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "JacksonAzureStorage",
+						"type": "LinkedServiceReference"
+					},
+					"name": "Airline"
+				},
+				{
+					"linkedService": {
+						"referenceName": "JacksonAzureStorage",
+						"type": "LinkedServiceReference"
+					},
+					"name": "Flight"
+				},
+				{
+					"linkedService": {
+						"referenceName": "JacksonAzureStorage",
+						"type": "LinkedServiceReference"
+					},
+					"name": "FactBookings"
+				},
+				{
+					"linkedService": {
+						"referenceName": "JacksonAzureStorage",
+						"type": "LinkedServiceReference"
+					},
+					"name": "Passenger"
+				},
+				{
+					"linkedService": {
+						"referenceName": "JacksonAzureStorage",
+						"type": "LinkedServiceReference"
+					},
+					"name": "Airport"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'sinkpractice',",
+				"     folderPath: 'SILVER_LAYER/Airline') ~> Airline",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'sinkpractice',",
+				"     folderPath: 'SILVER_LAYER/Flight') ~> Flight",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'sinkpractice',",
+				"     folderPath: 'SILVER_LAYER/FactBookings') ~> FactBookings",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'sinkpractice',",
+				"     folderPath: 'SILVER_LAYER/Passenger') ~> Passenger",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delta') ~> Airport"
+			]
+		}
+	}
+}
