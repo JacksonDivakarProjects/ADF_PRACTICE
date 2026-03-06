@@ -68,6 +68,13 @@
 						"type": "LinkedServiceReference"
 					},
 					"name": "FlightSink"
+				},
+				{
+					"linkedService": {
+						"referenceName": "JacksonAzureStorage",
+						"type": "LinkedServiceReference"
+					},
+					"name": "AirportSink"
 				}
 			],
 			"transformations": [
@@ -94,6 +101,9 @@
 				},
 				{
 					"name": "UpdateFlight"
+				},
+				{
+					"name": "UpdateAirport"
 				}
 			],
 			"scriptLines": [
@@ -141,13 +151,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Flight",
-				"source(output(",
-				"          airport_id as short,",
-				"          airport_name as string,",
-				"          city as string,",
-				"          country as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
+				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     documentForm: 'arrayOfDocuments') ~> Airport",
@@ -169,6 +173,7 @@
 				"     errors: true) ~> CheckinStatus",
 				"CheckinStatus alterRow(upsertIf(1==1)) ~> UpdateFactBookings",
 				"Flight alterRow(upsertIf(1==1)) ~> UpdateFlight",
+				"Airport alterRow(upsertIf(1==1)) ~> UpdateAirport",
 				"UpsertAirline sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'delta',",
@@ -244,7 +249,26 @@
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> FlightSink"
+				"     skipDuplicateMapOutputs: true) ~> FlightSink",
+				"UpdateAirport sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'sinkpractice',",
+				"     folderPath: 'SILVER_LAYER/Airport',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: false,",
+				"     updateable: false,",
+				"     upsertable: true,",
+				"     keys:['airport_id'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> AirportSink"
 			]
 		}
 	}
