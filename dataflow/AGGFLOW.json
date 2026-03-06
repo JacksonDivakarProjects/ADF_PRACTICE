@@ -12,13 +12,27 @@
 					"name": "OBT"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "FlightAgg",
+						"type": "DatasetReference"
+					},
+					"name": "FlightAgg"
+				}
+			],
 			"transformations": [
 				{
 					"name": "FlightNoGroupby"
 				},
 				{
 					"name": "RankTotalCost"
+				},
+				{
+					"name": "InsertValues"
+				},
+				{
+					"name": "ReplaceNullValue"
 				}
 			],
 			"scriptLines": [
@@ -58,7 +72,16 @@
 				"     TotalTicketCost = sum(ticket_cost),",
 				"          CountOfCheckin = count(checkin_status)) ~> FlightNoGroupby",
 				"FlightNoGroupby window(desc(TotalTicketCost, true),",
-				"     Rank = denseRank()) ~> RankTotalCost"
+				"     Rank = denseRank()) ~> RankTotalCost",
+				"ReplaceNullValue alterRow(insertIf(1==1)) ~> InsertValues",
+				"RankTotalCost derive(flight_number = iifNull(flight_number,\"N/A\")) ~> ReplaceNullValue",
+				"InsertValues sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> FlightAgg"
 			]
 		}
 	}

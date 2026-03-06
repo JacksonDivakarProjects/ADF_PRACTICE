@@ -1,0 +1,24 @@
+{
+	"name": "FlightAgg",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "JacksonAzureStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "FlightAgg.csv",
+				"folderPath": "AGG_FILES",
+				"fileSystem": "sinkpractice"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
